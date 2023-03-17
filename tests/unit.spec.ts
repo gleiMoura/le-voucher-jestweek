@@ -48,4 +48,10 @@ describe("test", () => {
         expect(order.finalAmount).toBe(amount - amount * (voucher.discount / 100));
         expect(order.applied).toBe(true);
     });
+
+    it("should apply discount(voucher)", (): any => {});
+
+    it("should not apply discount for used voucher", (): any => {});
+
+    it("should not apply discount for invalid valucher", ():any => {});
 });
