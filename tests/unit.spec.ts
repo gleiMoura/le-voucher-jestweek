@@ -93,5 +93,18 @@ describe("test", () => {
         expect(order.applied).toBe(false);
     });
 
-    it("should not apply discount for invalid valucher", (): any => { });
+    it("should not apply discount for invalid voucher", () => {
+        jest
+            .spyOn(voucherRepository, "getVoucherByCode")
+            .mockImplementationOnce((): any => {
+                return undefined;
+            });
+
+        const amount = 1000;
+        const promise = voucherService.applyVoucher(voucher.code, amount);
+        expect(promise).rejects.toEqual({
+            message: "Voucher does not exist.",
+            type: "conflict",
+        });
+    });
 });
