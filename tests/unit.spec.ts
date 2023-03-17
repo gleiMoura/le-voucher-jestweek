@@ -72,7 +72,26 @@ describe("test", () => {
         expect(order.applied).toBe(false);
     });
 
-    it("should not apply discount for used voucher", (): any => { });
+    it("should not apply discount for used voucher", async () => {
+        jest
+            .spyOn(voucherRepository, "getVoucherByCode")
+            .mockImplementationOnce((): any => {
+                return {
+                    id: 1,
+                    code: voucher.code,
+                    discount: voucher.discount,
+                    used: true,
+                };
+            });
+
+        const amount = 1000;
+        const order = await voucherService.applyVoucher(voucher.code, amount);
+
+        expect(order.amount).toBe(amount);
+        expect(order.discount).toBe(voucher.discount);
+        expect(order.finalAmount).toBe(amount);
+        expect(order.applied).toBe(false);
+    });
 
     it("should not apply discount for invalid valucher", (): any => { });
 });
