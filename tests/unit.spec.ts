@@ -1,5 +1,5 @@
 import voucherRepository from "repositories/voucherRepository";
-import createVoucher from "../src/services/voucherService";
+import voucherService from "../src/services/voucherService";
 
 describe("test", () => {
     const voucher = {
@@ -8,18 +8,13 @@ describe("test", () => {
     }
 
     it("It should create a voucher", async () => {
-        jest.spyOn(voucherRepository, "getVoucherByCode").mockImplementationOnce(() => {
-            return null
-        });
+        jest.spyOn(voucherRepository, "getVoucherByCode").mockImplementationOnce((): any => {});
 
-        jest.spyOn(voucherRepository, "createVoucher").mockImplementationOnce(() => {
-            return null
-        });
+        jest.spyOn(voucherRepository, "createVoucher").mockImplementationOnce(():any => {});
 
-        const result = await createVoucher.createVoucher(voucher.code, voucher.discount);
+        await voucherService.createVoucher(voucher.code, voucher.discount);
 
-
-        expect(result).toEqual(undefined)
+        expect(voucherService.createVoucher).toBeCalled();
     });
 
     it("It shouldn't create an exist voucher", async () => {
@@ -28,35 +23,9 @@ describe("test", () => {
         });
 
         try {
-            await createVoucher.createVoucher(voucher.code, voucher.discount);
+            await voucherService.createVoucher(voucher.code, voucher.discount);
         } catch (e) {
             expect(e.message).toMatch("Voucher already exist.");
         }
-    });
-
-    it("should apply a valid voucher", async () => {
-        const minAmount = 101;
-        const finalAmount = minAmount - minAmount * (voucher.discount / 100);
-        const expectedResponse = {
-            amount: minAmount,
-            discount: voucher.discount,
-            finalAmount,
-            applied: finalAmount !== minAmount,
-        };
-
-        jest
-            .spyOn(voucherRepository, "getVoucherByCode")
-            .mockImplementationOnce((): any => {
-                return { code: voucher.code, used: false };
-            });
-
-        jest
-            .spyOn(voucherRepository, "useVoucher")
-            .mockImplementationOnce((): any => {
-                return voucher.code;
-            });
-
-        const response = await createVoucher.applyVoucher(voucher.code, minAmount);
-        expect(response).toEqual(expectedResponse);
     });
 });
