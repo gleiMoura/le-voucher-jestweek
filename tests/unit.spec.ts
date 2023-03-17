@@ -8,13 +8,15 @@ describe("test", () => {
     }
 
     it("It should create a voucher", async () => {
-        jest.spyOn(voucherRepository, "getVoucherByCode").mockImplementationOnce((): any => {});
+        jest.spyOn(voucherRepository, "getVoucherByCode")
+            .mockImplementationOnce((): any => { });
 
-        jest.spyOn(voucherRepository, "createVoucher").mockImplementationOnce(():any => {});
+        jest.spyOn(voucherRepository, "createVoucher")
+            .mockImplementationOnce((): any => { });
 
         await voucherService.createVoucher(voucher.code, voucher.discount);
 
-        expect(voucherService.createVoucher).toBeCalled();
+        expect(voucherRepository.createVoucher).toBeCalled();
     });
 
     it("It shouldn't create an exist voucher", async () => {
@@ -34,12 +36,12 @@ describe("test", () => {
         jest.spyOn(voucherRepository, "getVoucherByCode").mockImplementationOnce((): any => {
             return {
                 ...voucher,
-                id:1,
+                id: 1,
                 used: false
             };
         });
 
-        jest.spyOn(voucherRepository, "useVoucher").mockImplementationOnce((): any => {});
+        jest.spyOn(voucherRepository, "useVoucher").mockImplementationOnce((): any => { });
 
         const amount = 1000;
         const order = await voucherService.applyVoucher(voucher.code, amount);
@@ -49,9 +51,9 @@ describe("test", () => {
         expect(order.applied).toBe(true);
     });
 
-    it("should apply discount(voucher)", (): any => {});
+    it("should apply discount(voucher)", (): any => { });
 
-    it("should not apply discount for used voucher", (): any => {});
+    it("should not apply discount for used voucher", (): any => { });
 
-    it("should not apply discount for invalid valucher", ():any => {});
+    it("should not apply discount for invalid valucher", (): any => { });
 });
